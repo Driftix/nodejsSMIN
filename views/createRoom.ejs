@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <%- include('./partials/header.ejs') -%>
+   <style>
+        html,
+        body {
+        height: 100%;
+        }
+        body {
+        display: -ms-flexbox;
+        display: -webkit-box;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: normal;
+        justify-content: center;
+        align-items: center;
+        -ms-flex-align: center;
+        -ms-flex-pack: center;
+        -webkit-box-align: center;
+        -webkit-box-pack: center;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+        }   
+
+    </style>
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        * {box-sizing: border-box;}
+        
+        /* Button used to open the chat form - fixed at the bottom of the page */
+        .open-button {
+          background-color: #555;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          opacity: 0.8;
+          position: fixed;
+          bottom: 23px;
+          right: 28px;
+          width: 280px;
+        }
+        .form{
+            display:inline;
+        }
+        /* The popup chat - hidden by default */
+        .chat-popup {
+          display: none;
+          position: fixed;
+          bottom: 0;
+          right: 15px;
+          border: 3px solid #f1f1f1;
+          z-index: 9;
+        }
+        
+        /* Add styles to the form container */
+        .form-container {
+          max-width: 300px;
+          padding: 10px;
+          background-color: white;
+        }
+        
+        /* Full-width textarea */
+        .form-container textarea {
+          width: 100%;
+          padding: 15px;
+          margin: 5px 0 22px 0;
+          border: none;
+          background: #f1f1f1;
+          resize: none;
+          min-height: 50px;
+        }
+        #messagebox{
+            max-height:100px;
+            overflow:auto;
+            background-color:#f1f1f1;
+            padding: 10px 10px 10px 10px;
+        }
+        /* When the textarea gets focus, do something */
+        .form-container textarea:focus {
+          background-color: #ddd;
+          outline: none;
+        }
+        
+        /* Set a style for the submit/send button */
+        .form-container .btn {
+          background-color: #337ab7;
+          border-color: #2e6da4;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          margin-bottom:10px;
+          opacity: 0.8;
+        }
+        
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+          background-color: red;
+        }
+        
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+          opacity: 1;
+        }
+        .rooms{
+            max-height:250px;
+            overflow:auto;
+            border-top: solid 2px rgb(210, 210, 210);
+           padding-top: 10px;
+        }
+        .form{
+            display:flex;
+            padding-bottom: 50px;
+        }
+        li{
+            list-style-type: none;
+            padding-right:20px;
+        }
+        .btn{
+            color:white;
+            background-color: #337ab7 ;
+            padding: 2px 12px 2px 12px;
+        }
+        .formroom{
+            display:flex;
+            padding: 0px 20px 20px 20px;
+        }
+        .roomBox{
+            background-color:white;
+            padding-top:10px;
+            border-radius:10px;
+        }
+        h4{
+            text-align: center;
+        }
+        .rules{
+            padding-bottom: 25px;
+            text-align:justify;
+        }
+        </style>
+    <body>
+            <h1 style:"text-align:center">Rules</h1>
+            <div class="rules">
+                <p>The rules are pretty simple ! You can create a room and invite your friends</p>
+                <p>Or you can join other players rooms, by choosing a room in the "Available rooms" section</p>
+                <p>To understand the game, you have a pixel grid to paint on, if you place a pixel</p>
+                <p>you have a timeout of 30 seconds, there is no real goal for now ! The goal of this website</p>
+                <p>is to paint something with or against someone !</p>
+        </div>
+        <!-- Create Room field -->
+        <form class="form" id="dynamicForm" action='/room' method='POST'>
+            <input class="form-control" id="roomName" type='text' name='roomName'></input>
+            <input class="btn btn-lg btn-primary btn-block" type='submit' value="Create" onclick="changeAction()"></input>
+        </form>
+        <!-- Rooms field -->
+        <div class="roomBox">
+        <h4>Available rooms</h4>
+        <div class="rooms">
+        <% rooms.forEach(function(room) { %>
+            
+            <form class="formroom" action="/room/<%= room.roomName %>" method='POST'>
+                <li> Room <%= room.roomName %> </li>
+                <input type="hidden" name="roomName" value="<%= room.roomName %>"/>
+                <input class="btn" type="submit" value="Join" />
+            </form>
+        <% }); %>
+        </div>
+        </div>
+        <!-- Chat field -->
+        <%- include('./partials/chat.ejs') -%>
+
+    </body>
+    <script>
+        
+        function changeAction(){
+            document.getElementById('dynamicForm').action = "/room/"+document.getElementById('roomName').value ;
+        }
+        //console.log('<%= user.name %>');
+    </script>
+</html>
